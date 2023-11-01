@@ -9,7 +9,9 @@ public class Buttons : MonoBehaviour
     [SerializeField] private GameObject _pauseBut;
     [SerializeField] private GameObject _pausepanel;
     [SerializeField] private GameObject _diePanel;
-
+    [SerializeField] private GameObject _board;
+    [SerializeField] private GameObject _return;
+    [SerializeField] private GameObject _top;
     public void Pausegame()
     {
         _pausepanel.SetActive(true);
@@ -27,6 +29,19 @@ public class Buttons : MonoBehaviour
             _pauseBut.SetActive(false);
         }
     }
+    public void top()
+    {
+        _top.SetActive(false);
+        _board.SetActive(true);
+        _return.SetActive(true);
+    }
+    public void returnGame()
+    {
+        _top.SetActive(true);
+        _board.SetActive(false);
+        _return.SetActive(false);
+    }
+
     public void resume()
     {
         Bird._isplay = true;

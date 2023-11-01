@@ -1,9 +1,10 @@
 
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class Point : MonoBehaviour
-{   
+{
     [SerializeField] private TextMeshProUGUI[] _text;
     /// <summary>
     /// text[0] score
@@ -15,111 +16,106 @@ public class Point : MonoBehaviour
 
     public static int best;
 
-    public GameObject _new;
-
-    [SerializeField] private Bird _bird;
-
-    string KEY = "score";
-
-    private void Awake()
+    [SerializeField] private GameObject _new;
+    public static bool score;
+    [SerializeField] private List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
+    private void Start()
     {
-        Load(KEY);
+        loadBest();
+        load();
     }
     public void Update()
     {
+        _text[0].text = Bird._point.ToString();
 
-        _text[0].text = _bird.Point.ToString();
-        
-        if (Bird._gameOver == true)
+        if (score == true) //when die
         {
-
-                if(_bird.Point > best)
-                {
-
-                    _new.SetActive(true);
-        ///<summary>
-        /// save new best and load
-        /// </summary>
-
-                    Save(KEY, _bird.Point);
-                    PlayerPrefs.Save();
-
-                    Load(KEY);
-                }
-                _text[3].text = best.ToString();
-
-                _text[1].text = _text[0].text;
-
-            medalAndAnn();   /// void ///
+            eachScore();
+            saveBest();
+            _text[1].text = _text[0].text;
+            texts[5].text = best.ToString();
+            medalAndAnn();
+            score = false;
         }
-
-
-        if(Bird._isplay == true)
+        if (Bird._isplay == true)
         {
             _text[0].gameObject.SetActive(true);
         }
     }
-/// <summary>
-/// announcement based on point
-/// <param name="medalAndAnn" ></param>
-/// </summary><
-    void medalAndAnn() 
+    void eachScore()
     {
+        SaveData.tableScore._score.Insert(0, Bird._point);
+        SaveData.tableScore.check();
+        SaveData.Save(SaveData.tableScore, "/table.json");
+        load();
+    }
+    void load()
+    {
+        SaveData.Load(ref SaveData.tableScore, "/table.json");
+        texts[5].text = best.ToString();
+        for(int i = 0; i < 5; i++)
+        {
+            texts[i].text = SaveData.tableScore._score[i].ToString();
+        }
         
-        if (_bird.Point >= 20 && _bird.Point < 40)
+    }
+    void saveBest()
+    {
+        if (Bird._point > best)
+        {
+            _new.SetActive(true);
+            SaveData.score.best = Bird._point;
+            SaveData.Save(SaveData.score, "/score.json");
+            loadBest();
+        }
+        _text[3].text = best.ToString();
+
+    }
+    void loadBest()
+    {
+        SaveData.Load(ref SaveData.score, "/score.json");
+        best = SaveData.score.best;
+    }
+    void medalAndAnn()
+    {
+
+        if (Bird._point >= 10 && Bird._point < 20)
         {
             _text[2].text = "bronze"; /////
 
-            if (_bird.Point >= 35)
+            if (Bird._point >= 18)
             {
-                _text[4].text = "reach 40 to get silver coin";
+                _text[4].text = "reach 20 to get silver coin";
             }
-            else _text[4].text = "keep calm";
+            else _text[4].text = "good job";
         }
-        else if (_bird.Point >= 40 && _bird.Point < 75) ////
+        else if (Bird._point >= 20 && Bird._point < 30) ////
         {
             _text[2].text = "silver";////
 
-            if (_bird.Point >= 70)
+            if (Bird._point >= 28)
             {
-                _text[4].text = "reach 75 to get gold coin";
+                _text[4].text = "reach 30 to get gold coin";
             }
-            else _text[4].text = "try your best";
+            else _text[4].text = "go go go";
 
         }
-        else if (_bird.Point >= 75)
+        else if (Bird._point >= 30)
         {
             _text[2].text = "gold !!";
 
-            _text[4].text = "are you hacking !";
+            _text[4].text = "you get the best!!!";
         }
         /////
         //////
-        if( _bird.Point < 17)
+        if (Bird._point < 8)
         {
             _text[4].text = "you noob :))";
-        }else if(_bird.Point < 20 && _bird.Point >= 17)
+        }
+        else if (Bird._point < 10 && Bird._point >= 8)
         {
             _text[4].text = "closest to a coin";
         }
-    }
-    
-    public void Save(string key, int best)
-    {
-        PlayerPrefs.SetInt(key, best);
-    }
-    /// <summary>
-    /// load best score
-    /// </summary>
-    /// <param name="key"></param>
-    ///
-    public void Load(string key)
-    {
-        best = PlayerPrefs.GetInt(key);
-    }
-    public void Delete(string key)
-    {
-        PlayerPrefs.DeleteKey(key);
     }
 
 }

@@ -44,15 +44,15 @@ public class PoleSpawn : MonoBehaviour
     }
     void voidvoid()
     {
-        if (_count == 20)
+        if (_count == 10)
         {
             Instantiate(_medal[0], _position, Quaternion.identity);
         }
-        if(_count == 40)
+        if(_count == 20)
         {
             Instantiate(_medal[1], _position, Quaternion.identity);
         }
-        if(_count == 75)
+        if(_count == 30)
         {
             Instantiate(_medal[2], _position, Quaternion.identity);
         }

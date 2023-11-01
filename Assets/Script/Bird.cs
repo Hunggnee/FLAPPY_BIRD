@@ -13,7 +13,7 @@ public class Bird : MonoBehaviour
 
     private bool _canRotate;
 
-    [SerializeField] private int _point; /// điểm
+    [SerializeField] public static int _point; /// điểm
 
     public static bool _gameOver; 
 
@@ -24,7 +24,6 @@ public class Bird : MonoBehaviour
     
 
     public AudioSource[] flap { get => _flap; set => _flap = value; }
-    public int Point { get => _point; set => _point = value; }
 
     private void Awake()
     {
@@ -33,7 +32,7 @@ public class Bird : MonoBehaviour
 
     private void Start()
     {
-        Point = 0;
+        _point = 0;
         Time.timeScale = 1;
         _gameOver = false;
         _isplay = false;
@@ -83,7 +82,7 @@ public class Bird : MonoBehaviour
     {
         if (collision.tag == "point")
         {
-            Point++;
+            _point++;
             _flap[1].Play(0);
         }
         
@@ -99,6 +98,9 @@ public class Bird : MonoBehaviour
             _flap[2].Play(0);
             _flap[3].Play(0);
             _gameOver = true;
+            Point.score = true;
+            Medal._savecoin = true;
         }
     }
+
 }
